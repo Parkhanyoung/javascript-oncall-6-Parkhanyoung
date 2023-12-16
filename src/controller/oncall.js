@@ -2,15 +2,16 @@ import InputParser from "../model/InputParser.js";
 import Member from "../model/member.js";
 import Members from "../model/members.js";
 import Planner from "../model/planner.js";
+import tryUntilSuccess from "../utils/tryUntilSuccess.js";
 import InputView from "../view/inputView.js";
 import OutputView from "../view/outputView.js";
 
 class Oncall {
   async init() {
-    const [month, day] = await this.readMonthAndDay();
+    const [month, day] = await tryUntilSuccess(this.readMonthAndDay.bind(this))();
 
-    const weekdayMembers = await this.readWeekdayMembers();
-    const holidayMembers = await this.readHolidayMembers();
+    const weekdayMembers = await tryUntilSuccess(this.readWeekdayMembers.bind(this))();
+    const holidayMembers = await tryUntilSuccess(this.readHolidayMembers.bind(this))();
 
     const planner = new Planner(month, day, weekdayMembers, holidayMembers);
 
