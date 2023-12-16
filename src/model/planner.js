@@ -21,6 +21,13 @@ class Planner {
     this.#holidayMembers = holidayMembers.getMembers();
   }
 
+  getOncallPlan() {
+    const dates = getDates(this.#month);
+    const plan = dates.map((date) => this.#pickWorker(date));
+    const result = this.#parsePlan(plan);
+    return result;
+  }
+
   #setDayStandard(startDay) {
     const startIndex = WEEK_DAYS.indexOf(startDay);
     const dayStandard = [...WEEK_DAYS.slice(startIndex), ...WEEK_DAYS.slice(0, startIndex)];
@@ -28,14 +35,23 @@ class Planner {
     this.#dayStandard = dayStandard;
   }
 
-  getOncallPlan() {
-    const dates = getDates(this.#month);
-    const plan = dates.map((date) => this.pickWorker(date));
-    const result = this.parsePlan(plan);
-    return result;
+  #pickWorker(date) {
+    const isHoliday = this.#isHoliday(date);
+    if (!isHoliday) {
+      const worker = this.#getWeekdayWorker();
+      this.#increasePickingWeekdayIndex();
+      this.#setPreviousWorker(worker);
+      return worker;
+    }
+    if (isHoliday) {
+      const worker = this.#getHolidayWorker(date);
+      this.#increasePickingHolidayIndex();
+      this.#setPreviousWorker(worker);
+      return worker;
+    }
   }
 
-  parsePlan(plan) {
+  #parsePlan(plan) {
     return plan.map((member, index) => {
       const date = index + 1;
 
@@ -43,38 +59,20 @@ class Planner {
         name: member.getName(),
         isHoliday: isHoliday(this.#month, date),
         date,
-        day: this.getDayString(date),
+        day: this.#getDayString(date),
       };
     });
   }
 
-  pickWorker(date) {
-    const isHoliday = this.isHoliday(date);
-
-    if (!isHoliday) {
-      const worker = this.getWeekdayWorker();
-      this.increasePickingWeekdayIndex();
-      this.setPreviousWorker(worker);
-      return worker;
-    }
-
-    if (isHoliday) {
-      const worker = this.getHolidayWorder(date);
-      this.increasePickingHolidayIndex();
-      this.setPreviousWorker(worker);
-      return worker;
-    }
-  }
-
-  setPreviousWorker(member) {
+  #setPreviousWorker(member) {
     this.#previousWorker = member;
   }
 
-  getWeekdayWorker() {
+  #getWeekdayWorker() {
     const worker = this.#weekdayMembers[this.#pickingWeekdayIndex];
 
-    if (this.isSerialWorking(worker)) {
-      this.switchWeekdayWorker();
+    if (this.#isSerialWorking(worker)) {
+      this.#switchWeekdayWorker();
       const worker = this.#weekdayMembers[this.#pickingWeekdayIndex];
       return worker;
     }
@@ -82,11 +80,11 @@ class Planner {
     return worker;
   }
 
-  getHolidayWorder() {
+  #getHolidayWorker() {
     const worker = this.#holidayMembers[this.#pickingHolidayIndex];
 
-    if (this.isSerialWorking(worker)) {
-      this.switchHolidayWorker();
+    if (this.#isSerialWorking(worker)) {
+      this.#switchHolidayWorker();
       const worker = this.#holidayMembers[this.#pickingHolidayIndex];
       return worker;
     }
@@ -94,49 +92,49 @@ class Planner {
     return worker;
   }
 
-  switchWeekdayWorker() {
+  #switchWeekdayWorker() {
     const updated = swapWithNext(this.#weekdayMembers, this.#pickingWeekdayIndex);
     this.#weekdayMembers = updated;
   }
 
-  switchHolidayWorker() {
+  #switchHolidayWorker() {
     const updated = swapWithNext(this.#holidayMembers, this.#pickingHolidayIndex);
     this.#holidayMembers = updated;
   }
 
-  isSerialWorking(worker) {
+  #isSerialWorking(worker) {
     return worker.getName() === this.#previousWorker?.getName();
   }
 
-  isHoliday(date) {
+  #isHoliday(date) {
     const isHolidayBool = isHoliday(this.#month, date);
-    const isWeekendBool = this.isWeekend(date);
+    const isWeekendBool = this.#isWeekend(date);
     return isHolidayBool || isWeekendBool;
   }
 
-  getDayString(date) {
-    const day = this.getDayIndex(date);
+  #getDayString(date) {
+    const day = this.#getDayIndex(date);
     const dayString = this.#dayStandard[day];
     return dayString;
   }
 
-  getDayIndex(date) {
+  #getDayIndex(date) {
     // 요일을 계산하여 수 형태로 반환 ex. 월 -> 0, 화 -> 1 ...
     return !(date % 7) ? 6 : (date % 7) - 1;
   }
 
-  isWeekend(date) {
-    const day = this.getDayString(date);
+  #isWeekend(date) {
+    const day = this.#getDayString(date);
     return WEEKEND.includes(day);
   }
 
-  increasePickingWeekdayIndex() {
+  #increasePickingWeekdayIndex() {
     const maxIndex = this.#weekdayMembers.length - 1;
     const updatedIndex = this.#pickingWeekdayIndex === maxIndex ? 0 : this.#pickingWeekdayIndex + 1;
     this.#pickingWeekdayIndex = updatedIndex;
   }
 
-  increasePickingHolidayIndex() {
+  #increasePickingHolidayIndex() {
     const maxIndex = this.#holidayMembers.length - 1;
     const updatedIndex = this.#pickingHolidayIndex === maxIndex ? 0 : this.#pickingHolidayIndex + 1;
     this.#pickingHolidayIndex = updatedIndex;

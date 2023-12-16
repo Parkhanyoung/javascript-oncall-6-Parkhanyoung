@@ -24,7 +24,7 @@
 - [x] docs/how-to-solve.md에서 미션 해결 전략 문항에 답변을 필수로 작성한다.
 - [x] 컨트롤러 및 15줄 이상 로직 분리
 - [x] 상수 분리
-- [ ] static, private 메소드 확인
+- [x] static, private 메소드 확인
 - [ ] 네이밍 통일
 - [ ] 중복 로직 분리
 
