@@ -1,4 +1,4 @@
-import { DAY_COUNT, WEEK_DAYS } from "../constants/date.js";
+import { WEEKEND, WEEK_DAYS } from "../constants/date.js";
 import { getDates, isHoliday } from "../utils/date.js";
 import { swapWithNext } from "../utils/swap.js";
 
@@ -126,7 +126,6 @@ class Planner {
   }
 
   isWeekend(date) {
-    const WEEKEND = ["토", "일"];
     const day = this.getDayString(date);
     return WEEKEND.includes(day);
   }

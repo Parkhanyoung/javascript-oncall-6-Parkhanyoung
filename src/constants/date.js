@@ -29,3 +29,7 @@ export const HOLIDAY_PER_MONTH = {
   11: [],
   12: [25],
 };
+
+export const AVAILABLE_MONTHS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"];
+export const AVAILABLE_DAYS = ["월", "화", "수", "목", "금", "토", "일"];
+export const WEEKEND = ["토", "일"];
