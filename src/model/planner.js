@@ -31,7 +31,21 @@ class Planner {
   getOncallPlan() {
     const dates = getDates(this.#month);
     const plan = dates.map((date) => this.pickWorker(date));
-    return plan;
+    const result = this.parsePlan(plan);
+    return result;
+  }
+
+  parsePlan(plan) {
+    return plan.map((member, index) => {
+      const date = index + 1;
+
+      return {
+        name: member.getName(),
+        isHoliday: isHoliday(this.#month, date),
+        date,
+        day: this.getDayString(date),
+      };
+    });
   }
 
   pickWorker(date) {
@@ -73,7 +87,7 @@ class Planner {
 
     if (this.isSerialWorking(worker)) {
       this.switchHolidayWorker();
-      const worker = this.#weekdayMembers[this.#pickingHolidayIndex];
+      const worker = this.#holidayMembers[this.#pickingHolidayIndex];
       return worker;
     }
 
