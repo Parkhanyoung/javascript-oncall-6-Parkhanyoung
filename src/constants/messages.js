@@ -1,5 +1,8 @@
-const INPUT_MESSAGE = {};
-const OUTPUT_MESSAGE = {};
+const INPUT_MESSAGE = {
+  monthAndDay: "비상 근무를 배정할 월과 시작 요일을 입력하세요> ",
+  weekdayMember: "평일 비상 근무 순번대로 사원 닉네임을 입력하세요> ",
+  holidayMember: "휴일 비상 근무 순번대로 사원 닉네임을 입력하세요> ",
+};
 
 const errorString = (message) => `[ERROR] ${message}`;
 // new
@@ -14,4 +17,4 @@ const ERROR_MESSAGE = {
   invalidMemberName: errorString("근무자의 이름은 1글자 이상 5글자이하여야 합니다."),
 };
 
-export { INPUT_MESSAGE, OUTPUT_MESSAGE, ERROR_MESSAGE };
+export { INPUT_MESSAGE, ERROR_MESSAGE };
