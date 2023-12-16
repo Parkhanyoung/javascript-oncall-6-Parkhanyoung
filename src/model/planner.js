@@ -121,7 +121,7 @@ class Planner {
   }
 
   getDayIndex(date) {
-    // 요일을 수로 반환 ex. 월: 0, 화: 1 ...
+    // 요일을 계산하여 수 형태로 반환 ex. 월 -> 0, 화 -> 1 ...
     return !(date % 7) ? 6 : (date % 7) - 1;
   }
 

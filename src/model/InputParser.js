@@ -3,7 +3,7 @@ import { ERROR_MESSAGE } from "../constants/messages.js";
 
 const InputParser = {
   parseMonthAndDay(input) {
-    const splited = input.split(",");
+    const splited = this.splitByComma(input);
     const [month, day] = splited.map((string) => string.trim());
 
     this.validateMonth(month);
@@ -25,9 +25,13 @@ const InputParser = {
   },
 
   parseMemberNames(memberNames) {
-    const splited = memberNames.split(",");
+    const splited = this.splitByComma(memberNames);
     const trimmed = splited.map((string) => string.trim());
     return trimmed;
+  },
+
+  splitByComma(string) {
+    return string.split(",");
   },
 };
 
