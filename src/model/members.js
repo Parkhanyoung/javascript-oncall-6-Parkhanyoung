@@ -11,6 +11,14 @@ class Members {
     this.#members = [...members];
   }
 
+  getNames() {
+    return this.#members.map((member) => member.getName());
+  }
+
+  getMembers() {
+    return this.#members;
+  }
+
   static #validateMembers(members) {
     if (!members.every((member) => member instanceof Member)) {
       throw new Error("[ERROR] 멤버 객체가 아닌 값이 포함되어 있습니다.");
